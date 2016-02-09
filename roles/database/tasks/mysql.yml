@@ -1,3 +1,20 @@
 ---
 - name: install mysql
-  apt: name=mysql-server=5.5* state=present
+  apt: name={{ item }} state=present
+  with_items:
+  - mysql-server=5.5*
+  - python-mysqldb
+- name: create database
+    mysql_db:
+      name={{ db_name }}
+      state=present
+- name: import database
+  mysql_db:
+    name={{ db_name }}
+    state=import
+    target={{ db_dump }}
+  mysql_user:
+    name={{ db_user }}
+    password={{ db_pass }}
+    priv={{ db_name }}.*:ALL,GRANT
+    state=present
