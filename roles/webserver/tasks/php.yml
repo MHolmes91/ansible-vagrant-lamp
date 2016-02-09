@@ -1,0 +1,46 @@
+# https://alexcabal.com/installing-apache-mod_fastcgi-php-fpm-on-ubuntu-server-maverick/
+# Don't need to add the repos though
+---
+- name: get repository for PHP 5.6
+  apt_repository:
+    repo="ppa:ondrej/php5-5.6"
+    state=present
+    update_cache=yes
+- name: install php and additions
+  apt: name={{ item }} state=present
+  with_items:
+  - apache2-mpm-worker
+  - libapache2-mod-fastcgi
+  - mcrypt
+  - php5-fpm=5.6*
+  - php5-cli=5.6*
+  - php5-curl
+  - php5-intl
+  - php5-json
+  - php5-mcrypt
+  - php5-mysql
+  notify:
+  - restart apache
+  - restart php
+- name: modify php-fpm www.conf file
+  lineinfile:
+    dest: /etc/php5/fpm/pool.d/www.conf
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+  - { regexp: '^user = ', line: 'user = vagrant' }
+  - { regexp: '^group = ', line: 'group = vagrant' }
+  - { regexp: '^listen.owner = ', line: 'listen.owner = vagrant' }
+  - { regexp: '^listen.group = ', line: 'listen.group = vagrant' }
+  notify:
+  - restart php
+- name: enable fast cgi apache modules
+  apache2_module:
+    name={{ item.name }}
+    state=present
+  with_items:
+  - { name: 'actions' }
+  - { name: 'alias' }
+  - { name: 'fastcgi' }
+  notify:
+  - restart apache

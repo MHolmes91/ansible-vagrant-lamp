@@ -1,0 +1,33 @@
+#Todo
+#Set up apache configuration for the folder, including user
+#Set up php configuration
+#Configure MySQL
+#Import DB
+#Install composer dependencies
+#Restart everything to make sure it is in good condition
+
+---
+- hosts: all
+  become: yes
+  become_method: sudo
+  vars:
+    db_dump: /db/db.sql
+    site_url: test.vagrantshare.markholm.es
+  pre_tasks:
+  - name: update apt cache
+    apt: update_cache=yes
+  tasks:
+  - name: install desired packages
+    apt: name={{ item }} state=present
+    with_items:
+    #Things I like to have
+    - vim
+    - htop
+    - lynx
+    - curl
+    - zsh
+    - zip
+  roles:
+  - webserver
+  - database
+  - package-management

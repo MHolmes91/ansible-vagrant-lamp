@@ -1,0 +1,3 @@
+---
+- name: install mysql
+  apt: name=mysql-server=5.5* state=present

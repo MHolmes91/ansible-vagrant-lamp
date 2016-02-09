@@ -1,0 +1,15 @@
+---
+- name: install composer
+  shell: curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+- name: set composer permissions
+  file: path=/usr/local/bin/composer mode=a+x state=file
+- name: see if composer.json exists
+  stat: path=/var/www/html/composer.json
+  register: composer_config
+- command: echo "no composer.json exists"
+  when: not composer_config.stat.exists
+- name: install project dependencies in composer
+  composer:
+    command=install
+    working_dir=/var/www/html
+  when: composer_config.stat.exists

@@ -1,0 +1,35 @@
+<VirtualHost *:80>
+  ServerName {{ site_url }}
+
+  ## Vhost docroot
+  DocumentRoot "/var/www/vagrant"
+
+  ## PHP Config
+  FastCgiExternalServer /var/www/php5.external -socket /var/run/php5-fpm.sock
+  AddHandler php5-fcgi .php
+  Action php5-fcgi /usr/lib/cgi-bin/php5.external
+  Alias /usr/lib/cgi-bin/       /var/www/
+
+  ## Directories, there should at least be a declaration for /var/www/html
+
+  <Directory "/var/www/vagrant">
+    Options Indexes FollowSymlinks MultiViews
+    AllowOverride All
+    Require all granted
+
+  </Directory>
+
+  ## Logging
+  ErrorLog "/var/log/apache2/error.log"
+  ServerSignature Off
+  CustomLog "/var/log/apache2/access.log" combined
+
+  ## Server aliases
+  ServerAlias www.{{ site_url }}
+
+  ## SetEnv/SetEnvIf for environment variables
+  SetEnv APP_ENV dev
+
+  ## Custom fragment
+
+</VirtualHost>

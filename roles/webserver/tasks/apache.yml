@@ -1,0 +1,33 @@
+---
+- name: Install Apache
+  apt: name=apache2=2.4* state=present
+- name: Change Apache User and Group
+  lineinfile:
+    dest=/etc/apache2/envvars
+    regexp="^export APACHE_RUN_USER="
+    line="export APACHE_RUN_USER=vagrant"
+  lineinfile:
+    dest=/etc/apache2/envvars
+    regexp="^export APACHE_RUN_GROUP="
+    line="export APACHE_RUN_GROUP=vagrant"
+  notify:
+  - restart apache
+- name: Copy VHost Template To Vagrant
+  template:
+    src=virtual-hosts.conf.j2
+    dest=/etc/apache2/sites-available/vagrant.conf
+  notify:
+  - reload apache
+- name: Remove Default VHost
+  file:
+    path=/etc/apache2/sites-enabled/000-default.conf
+    state=absent
+  notify:
+  - reload apache
+- name: Insert Our VHost
+  file:
+    src=/etc/apache2/sites-available/vagrant.conf
+    dest=/etc/apache2/sites-enabled/vagrant.conf
+    state=link
+  notify:
+  - reload apache
