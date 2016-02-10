@@ -1,0 +1,4 @@
+#Put custom pre tasks here
+---
+- name: running pre-tasks
+- debug: msg="Now running pre tasks..."

@@ -9,8 +9,13 @@
     db_dump: /db/db.sql
     site_url: vagrant-ansible.local
   pre_tasks:
+  - include: tasks/pre_tasks.yml
   - name: update apt cache
     apt: update_cache=yes
+  roles:
+  - webserver
+  - database
+  - package-management
   tasks:
   - name: install desired packages
     apt: name={{ item }} state=present
@@ -22,7 +27,4 @@
     - curl
     - zsh
     - zip
-  roles:
-  - webserver
-  - database
-  - package-management
+  - include: tasks/post_tasks.yml
