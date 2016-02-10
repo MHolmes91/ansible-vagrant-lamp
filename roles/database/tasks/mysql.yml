@@ -5,14 +5,15 @@
   - mysql-server=5.5*
   - python-mysqldb
 - name: create database
-    mysql_db:
-      name={{ db_name }}
-      state=present
+  mysql_db:
+    name={{ db_name }}
+    state=present
 - name: import database
   mysql_db:
     name={{ db_name }}
     state=import
     target={{ db_dump }}
+- name: create database user
   mysql_user:
     name={{ db_user }}
     password={{ db_pass }}

@@ -1,6 +1,14 @@
 ---
 - name: Install Apache
   apt: name=apache2=2.4* state=present
+- name: Enable Widely used Apache Modules
+  apache2_module:
+    name={{ item.name }}
+    state=present
+  with_items:
+  - { name: 'rewrite' }
+  - { name: 'actions' }
+  - { name: 'alias' }
 - name: Change Apache User and Group
   lineinfile:
     dest=/etc/apache2/envvars
