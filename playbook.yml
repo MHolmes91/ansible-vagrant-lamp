@@ -7,7 +7,7 @@
     db_pass: vagrant
     db_name: vagrant
     db_dump: /db/db.sql
-    site_url: vagrant-ansible.local
+    site_url: ansible-vagrant-lamp.local
   pre_tasks:
   - include: tasks/pre_tasks.yml
   - name: update apt cache
