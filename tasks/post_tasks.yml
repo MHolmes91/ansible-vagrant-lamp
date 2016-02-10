@@ -1,4 +1,4 @@
 #Post custom post tasks here
 ---
 - name: running post-tasks
-- debug: msg="Now running post tasks..."
+  debug: msg="Now running post tasks..."
