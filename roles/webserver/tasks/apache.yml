@@ -1,6 +1,6 @@
 ---
 - name: Install Apache
-  apt: name=apache2=2.4* state=present
+  apt: name=apache2 state=present
 - name: Enable Widely used Apache Modules
   apache2_module:
     name={{ item.name }}
